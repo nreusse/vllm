@@ -864,7 +864,10 @@ class GraniteSpeechForConditionalGeneration(
         # Audio placeholders don't use an index, so value doesn't matter
         audio_tok = cls.get_placeholder_str("audio", 0)
 
-        if task_type == "translate":
+        if model_config.model == "ibm-granite/granite-4.0-1b-speech" and request_prompt:
+            # Incorporate request_prompt for keyword biasing if provided
+            user_prompt = f"{audio_tok}{request_prompt}"
+        elif task_type == "translate":
             full_lang_name_to = cls.supported_languages.get(to_language, to_language)
             user_prompt = f"{audio_tok}translate the speech to {full_lang_name_to}"  # noqa: E501
         elif task_type == "transcribe":
